@@ -1,2 +1,5 @@
 .idea/
 venv/
+bot_python.session
+geckodriver.log
+utils/__pycache__/
