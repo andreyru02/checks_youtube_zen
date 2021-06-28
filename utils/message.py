@@ -7,9 +7,15 @@ with open('./config.ini', 'r') as f:
     moder = data[3].split(' = ')[1]  # модерация
 
 
-def send_message(url):
+def send_message(urls):
     """Отправляем новый пост в канал модерации"""
     app = Client("bot_python", api_id, api_hash)
     app.start()
-    app.send_message(eval(moder), url)
+    for type_, elem in urls.items():
+        if type_ == 'img':
+            for img in elem:
+                app.send_photo(moder, img)
+        elif type_ == 'video':
+            for video in elem:
+                app.send_message(moder, video)
     app.stop()

@@ -7,12 +7,19 @@ class SQL:
         self.connection = sqlite3.connect(database, check_same_thread=False)
         self.cursor = self.connection.cursor()
         self.create_table_youtube()
+        self.create_table_zen()
 
     def create_table_youtube(self):
         """Создание таблицы для хранения видео youtube"""
         with self.connection:
             return self.cursor.execute("CREATE TABLE IF NOT EXISTS youtube "
                                        "('channel' TEXT NOT NULL, 'video' TEXT NOT NULL UNIQUE)")
+
+    def create_table_zen(self):
+        """Создание таблицы для хранения постов yandex zen"""
+        with self.connection:
+            return self.cursor.execute("CREATE TABLE IF NOT EXISTS zen "
+                                       "('channel' TEXT NOT NULL, 'post' TEXT NOT NULL UNIQUE)")
 
     def video_youtube_exists(self, video):
         """Проверяет существование видео в БД"""
@@ -21,22 +28,19 @@ class SQL:
                                          (video,)).fetchall()
             return bool(len(result))
 
-    def get_last_rowid(self):
-        """Получение последнего ROWID"""
-        with self.connection:
-            return self.cursor.execute("SELECT ROWID, * FROM messages LIMIT 1 OFFSET (SELECT COUNT(*) FROM messages)-1")
-
-    def get_data_in_table(self, message):
-        """Получение записи о посте в таблице"""
-        with self.connection:
-            return self.cursor.execute(f"SELECT * FROM messages WHERE ROWID = {message.text}")
-
     def write_youtube(self, channel, video):
         """Записывает название канала и видео"""
         with self.connection:
             return self.cursor.execute("INSERT INTO youtube VALUES (?,?)", (channel, video,))
 
-    def add_message_id(self, username, message_id):
-        """Добавление message_id"""
+    def post_zen_exists(self, post):
+        """Проверяет существование поста в БД"""
         with self.connection:
-            return self.cursor.execute("INSERT INTO messages VALUES (?,?)", (username, message_id,))
+            result = self.cursor.execute("SELECT post FROM zen WHERE post=?",
+                                         (post,)).fetchall()
+            return bool(len(result))
+
+    def write_zen(self, channel, post):
+        """Записывает название канала и поста"""
+        with self.connection:
+            return self.cursor.execute("INSERT INTO zen VALUES (?,?)", (channel, post,))

@@ -3,3 +3,4 @@ venv/
 bot_python.session
 geckodriver.log
 utils/__pycache__/
+database/__pycache__
