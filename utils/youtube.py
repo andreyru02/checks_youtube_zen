@@ -1,5 +1,6 @@
 from time import sleep
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from datetime import datetime
 import re
 from utils import error, message
@@ -19,7 +20,9 @@ def get_date():
 
 def check_youtube():
     """Проверяет наличие нового видео на канале"""
-    driver = webdriver.Firefox()
+    options = FirefoxOptions()
+    options.add_argument("--headless")
+    driver = webdriver.Firefox(options=options)
     info = {'video': []}
     for url in acc_youtube:
         channel_name = re.sub(pattern, r'\2', url)

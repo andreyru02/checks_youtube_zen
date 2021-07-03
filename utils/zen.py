@@ -1,6 +1,7 @@
 import re
 from datetime import datetime
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from bs4 import BeautifulSoup as bs
 from time import sleep
 from database.sql import SQL
@@ -26,7 +27,9 @@ def get_date():
 def check_zen():
     try:
         global driver
-        driver = webdriver.Firefox()
+        options = FirefoxOptions()
+        options.add_argument("--headless")
+        driver = webdriver.Firefox(options=options)
         for url in acc_zen:  # переходим на аккаунт
             driver.get(url)
             print(f'{get_date()} Переходим на аккаунт {url}')
